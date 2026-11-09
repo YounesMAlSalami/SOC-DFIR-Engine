@@ -69,62 +69,110 @@ The platform generates four operational deliverables from a single command:
  * **Incident Responders & DFIR Specialists:** Hardened digital forensics with tamper-evident chain of custody and instant artifact verification.
  * **Threat Hunters:** Behavioral baseline anomaly detection and hunt hypothesis testing across multi-source historical logs.
  * **Cybersecurity Researchers:** Developing and documenting reproducible attack case studies.
+
 ## Getting Started
+
 ### Prerequisites
- * **Python 3.13+** (Standard libraries only; zero third-party dependencies required).
- * **GCC / Clang** (Optional, only required if compiling the C pre-indexer for gigabyte-scale logs).
-### Installation & Setup
- 1. Clone the repository:
-   ```bash
-   git clone [https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git](https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git)
-   cd SOC-DFIR-Engine
-   
-   ```
- 2. Compile the high-speed C pre-indexer *(Optional)*:
-   ```bash
-   gcc -O3 -Wall -Wextra -pedantic c_ingestor/raw_pre_indexer.c -o c_ingestor/raw_pre_indexer
-   
-   ```
+* **Python 3.13+** (Standard libraries only; zero third-party pip dependencies required).
+* **C Compiler (GCC / Clang)** (Optional; only required if compiling the raw byte pre-indexer for gigabyte-scale logs).
+
+---
+
+### Installation & Compilation by Platform
+
+#### Linux & macOS
+```bash
+git clone [https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git](https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git)
+cd SOC-DFIR-Engine
+
+# Optional: compile C pre-indexer for maximum ingest throughput
+gcc -O3 -Wall -Wextra -pedantic c_ingestor/raw_pre_indexer.c -o c_ingestor/raw_pre_indexer
+
+```
+#### Android (Termux)
+```bash
+pkg update && pkg install python git clang -y
+git clone [https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git](https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git)
+cd SOC-DFIR-Engine
+
+# Optional: compile C pre-indexer via clang
+clang -O3 c_ingestor/raw_pre_indexer.c -o c_ingestor/raw_pre_indexer
+
+```
+#### Windows (PowerShell)
+```powershell
+git clone [https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git](https://github.com/YounesMAlSalami/SOC-DFIR-Engine.git)
+cd SOC-DFIR-Engine
+
+# Optional: compile using MSVC or MinGW gcc
+# gcc -O3 c_ingestor/raw_pre_indexer.c -o c_ingestor/raw_pre_indexer.exe
+
+```
 ## Usage Workflow
-### 1. Generate Realistic Multi-Host Test Evidence
-To validate the full detection and correlation cycle without external datasets:
+The engine provides two distinct operating modes: **Production Ingestion** (for real-world incident response) and **Synthetic Lab Execution** (for verification, testing, and training).
+### Mode A: Real SOC Operational Ingestion (Real Evidence)
+Use this mode when investigating active incidents, triaging exported evidence directories, or analyzing extracted disk logs.
+#### 1. Ingest Raw Evidence Files or Entire Directories
+Pass specific log files or full directories (supports Sysmon JSONL, Linux Auth logs, Web Access logs, Firewall KV, and CSV Egress):
+ * **Linux / macOS / Termux:**
+   ```bash
+   # Pure Python pipeline
+   python3 lss_cli.py ingest /path/to/your/logs
+   
+   # Accelerated via C binary pre-indexer
+   python3 lss_cli.py ingest /path/to/your/logs --c-binary ./c_ingestor/raw_pre_indexer
+   
+   ```
+ * **Windows (PowerShell):**
+   ```powershell
+   python lss_cli.py ingest C:\Path\To\Your\Logs
+   
+   ```
+#### 2. Execute Correlation & Export Enterprise Incident Deliverables
+Run recursive process reconstruction, session binding, and NIST-compliant reporting:
+ * **Linux / macOS / Termux:**
+   ```bash
+   python3 lss_cli.py analyze --output-dir ./reports
+   
+   ```
+ * **Windows (PowerShell):**
+   ```powershell
+   python lss_cli.py analyze --output-dir .\reports
+   
+   ```
+### Mode B: Synthetic Lab & Testing Workflow (Demo Mode)
+Use this mode to test and showcase the engine without requiring external corporate datasets. It generates a multi-stage, multi-host synthetic attack scenario (Windows Sysmon + Base64 PowerShell + 7z Staging + Lateral SSH Pivot + Linux Auth + Database CSV Egress).
+#### Step 1: Generate Multi-Vector Test Evidence
 ```bash
 python3 lss_cli.py generate-lab --lab-dir ./sample_forensic_lab
 
 ```
-This generates a multi-vector intrusion dataset across Windows Sysmon JSONL, Linux Auth logs, and Database CSV egress telemetry.
-### 2. Ingest Evidence into the Cryptographic Vault
-Ingest single files or entire evidence directories:
+#### Step 2: Ingest the Generated Scenario
 ```bash
-# Pure Python pipeline
 python3 lss_cli.py ingest ./sample_forensic_lab
 
-# Or accelerated via the C binary bridge
-python3 lss_cli.py ingest ./sample_forensic_lab --c-binary ./c_ingestor/raw_pre_indexer
-
 ```
-### 3. Check Vault Status
-Review ingested host topologies and event distributions:
+#### Step 3: Check Forensic Vault Integrity
 ```bash
 python3 lss_cli.py status
 
 ```
-### 4. Execute Correlation & Generate Deliverables
-Run deterministic correlation, process tree lineage extraction, and artifact generation:
+#### Step 4: Run Deterministic Analysis & Generate Reports
 ```bash
-python3 lss_cli.py analyze --output-dir ./forensic_reports
+python3 lss_cli.py analyze --output-dir ./reports
 
 ```
-Inspect the generated artifacts in ./forensic_reports:
- * Workbench_<HOST>.html (Interactive triage UI)
- * Forensic_Report_<HOST>.md (Case study report)
- * AttackChain_<HOST>_<SESSION>.drawio (Visual architecture diagram)
-### 5. Reverse Traceability Verification
-Instantly verify any evidence record back to its physical storage coordinates using its SHA-256 digest:
+Inspect the generated deliverables inside ./reports:
+ * Workbench_<HOST>.html (Interactive offline SOC investigation workbench).
+ * Forensic_Report_<HOST>.md (NIST SP 800-61 / SANS compliant executive report).
+ * AttackChain_<HOST>_<SESSION>.drawio (Native Draw.io XML attack chain diagram).
+#### Step 5: Cryptographic Chain-of-Custody Verification
+Verify any alert record back to its exact disk byte offset and raw line using its SHA-256 hash prefix:
 ```bash
 python3 lss_cli.py verify-hash <SHA256_PREFIX>
 
 ```
+
 ## Author
 **Younes Al-Salami**
 Cybersecurity Specialist & SOC / DFIR Analyst
