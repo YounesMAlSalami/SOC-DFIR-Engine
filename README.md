@@ -1,5 +1,4 @@
 
-```markdown
 # SOC-DFIR-Engine: Deterministic Incident Narrative Platform
 
 [![Python 3.13](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/)
@@ -136,4 +135,3 @@ Cybersecurity Specialist & SOC / DFIR Analyst
 This project is licensed under the MIT License.
 ```
 
-```
