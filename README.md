@@ -1,4 +1,4 @@
-إليك ملف README.md بالكامل في قالب كود واحد، جاهز للنسخ المباشر واللصق دون أن يتأثر التنسيق إطلاقاً:
+
 ```markdown
 # SOC-DFIR-Engine: Deterministic Incident Narrative Platform
 
@@ -129,8 +129,9 @@ python3 lss_cli.py verify-hash <SHA256_PREFIX>
 ## Author
 **Younes Al-Salami**
 Cybersecurity Specialist & SOC / DFIR Analyst
- * Portfolio: younes-alsalami.vercel.app
+ * Portfolio: https://younes-alsalami.vercel.app
  * GitHub: @YounesMAlSalami
+ * LinkedIn: https://www.linkedin.com/in/younes-al-salami
 ## License
 This project is licensed under the MIT License.
 ```
