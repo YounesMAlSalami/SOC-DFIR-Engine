@@ -60,7 +60,9 @@ The platform generates four operational deliverables from a single command:
 │   ├── correlator.py              # Recursive CTE process tree & deterministic chain engine
 │   ├── lateral_movement.py        # Cross-host pivot detector with dual-hash proof
 │   ├── storyteller.py             # Markdown, Mermaid, and Draw.io XML generator
-│   └── html_studio.py             # Single-file interactive HTML DFIR Workbench builder
+│   └── html_studio.py
+|    └── web_server.py 
+            # Single-file interactive HTML DFIR Workbench builder
 └── lss_cli.py                     # Unified CLI orchestrator & multi-vector lab generator
 
 ```
@@ -109,7 +111,9 @@ cd SOC-DFIR-Engine
 
 ```
 ## Usage Workflow
-The engine provides two distinct operating modes: **Production Ingestion** (for real-world incident response) and **Synthetic Lab Execution** (for verification, testing, and training).
+
+The engine provides three distinct operating modes: **Production CLI Ingestion** (for real-world incident response), **Synthetic Lab Execution** (for verification and training), and **Live Interactive Web Workbench** (for browser-based drag-and-drop triage).
+
 ### Mode A: Real SOC Operational Ingestion (Real Evidence)
 Use this mode when investigating active incidents, triaging exported evidence directories, or analyzing extracted disk logs.
 #### 1. Ingest Raw Evidence Files or Entire Directories
@@ -172,6 +176,26 @@ Verify any alert record back to its exact disk byte offset and raw line using it
 python3 lss_cli.py verify-hash <SHA256_PREFIX>
 
 ```
+
+---
+
+### Mode C: Live Interactive Web Workbench (GUI Server Mode)
+
+Launch the zero-dependency, multi-threaded local web server to perform drag-and-drop log ingestion, real-time vault health monitoring, and interactive attack chain filtering directly from your browser:
+
+* **Linux / macOS / Termux:**
+  ```bash
+  python3 lss_cli.py ui --port 8080
+
+Windows (PowerShell):
+```bash
+python lss_cli.py ui --port 8080
+
+Once active, open your browser and navigate to:
+
+```bash
+[http://127.0.0.1:8080](http://127.0.0.1:8080)
+
 
 ## Author
 **Younes Al-Salami**
