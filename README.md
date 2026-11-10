@@ -189,7 +189,8 @@ Launch the zero-dependency, multi-threaded local web server to perform drag-and-
 
 Windows (PowerShell):
 
-python lss_cli.py ui --port 8080
+  ```bash
+  python lss_cli.py ui --port 8080
 
 Once active, open your browser and navigate to:
 
