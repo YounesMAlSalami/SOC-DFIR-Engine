@@ -187,7 +187,7 @@ Launch the zero-dependency, multi-threaded local web server to perform drag-and-
   ```bash
   python3 lss_cli.py ui --port 8080
 
-Windows (PowerShell):
+* **Windows (PowerShell):**
 
   ```bash
   python lss_cli.py ui --port 8080
