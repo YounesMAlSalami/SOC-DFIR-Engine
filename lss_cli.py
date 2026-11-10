@@ -2,6 +2,7 @@
 # Project: Log Story Studio (LSS) - Production Forensic Engine
 # Python Version: 3.13 (Standard Library Only)
 
+from core.web_server import start_workbench_server
 import argparse
 import json
 import sys
@@ -15,6 +16,10 @@ from core.lateral_movement import LateralMovementDetector
 from core.storyteller import ForensicStoryteller
 from core.html_studio import HTMLForensicWorkbench
 
+
+def cmd_ui(args):
+    """Starts the zero-dependency interactive local web workbench."""
+    start_workbench_server(db_path=args.db, host=args.host, port=args.port)
 
 def cmd_ingest(args: argparse.Namespace) -> None:
     db = ForensicDatabase(args.db)
@@ -245,6 +250,13 @@ def main() -> None:
     p_lab = subparsers.add_parser("generate-lab", help="Generate realistic multi-host, multi-format forensic test lab")
     p_lab.add_argument("--lab-dir", default="sample_forensic_lab", help="Directory to write sample evidence files")
     p_lab.set_defaults(func=cmd_generate_lab)
+    
+    # Subparser for UI Workbench
+    p_ui = subparsers.add_parser("ui", help="Launch the local interactive SOC DFIR web workbench")
+    p_ui.add_argument("--host", default="0.0.0.0", help="Binding host IP (default: 0.0.0.0)")
+    p_ui.add_argument("--port", type=int, default=8080, help="Binding web port (default: 8080)")
+    p_ui.set_defaults(func=cmd_ui)
+
 
     args = parser.parse_args()
     args.func(args)
